@@ -35,11 +35,16 @@ Your solution must:
 - Generate one prediction for every request
 - Write the final predictions to `output.csv` in the repository root
 
-Run the starter Python entry point with:
+Install the two runtime dependencies and run the production entry point with:
 
 ```bash
-python3 code/main.py
+python -m pip install -r requirements.txt
+python code/main.py
 ```
+
+The pipeline uses deterministic Python and `Decimal` arithmetic; no API key or
+network call is needed at runtime. It writes the submission-ready root-level
+`output.csv` and refreshes `evaluation/usage_report.md`.
 
 After running your solution, confirm that `output.csv` exists in the repository root and contains the required columns and one row for every request.
 
