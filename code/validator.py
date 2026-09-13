@@ -7,11 +7,16 @@ and financial invariant required by §6.2 of problem_statement.md.
 """
 
 import re
+import sys
 from datetime import datetime, timedelta
 from decimal import Decimal, ROUND_DOWN
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 import pandas as pd
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
 
 from code.cashflow_engine import CashflowEngine
 from code.data_fusion import DataFusionLoader, RequestContext
@@ -314,3 +319,21 @@ class OutputValidator:
 
         is_valid = (len(errors) == 0)
         return is_valid, errors
+
+
+if __name__ == "__main__":
+    dataset_path = REPO_ROOT / "dataset"
+    target_csv = Path(sys.argv[1]) if len(sys.argv) > 1 else (REPO_ROOT / "output.csv")
+    validator = OutputValidator(dataset_path, target_csv)
+    passed, errs = validator.validate()
+    if passed:
+        print("PASS")
+        print("0 errors")
+        sys.exit(0)
+    else:
+        print("FAIL")
+        for err in errs[:20]:
+            print(f"Error: {err}")
+        print(f"{len(errs)} errors")
+        sys.exit(1)
+
